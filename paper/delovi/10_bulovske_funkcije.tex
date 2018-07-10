@@ -7,7 +7,7 @@ Za bulovsku funkciju sa $n$ bulovskih argumenata, postoji $2^{n}$ mogu\'c{}ih ul
 
 \[ \underbrace{2*2*2* \dotsb *2}_{\text{$2^{n}$}} = 2^{2^{n}} \]
 
-Funkcije koje primaju neozna\v{c}eni broj u opsegu $[0,2^{n}-1]$ se mogu zameniti sa $n$ bulovskih funkcija sa $n$ argumenata. Kao primer, neka je data funkcija $F$ koja prima i vra\'c{}a neozna\v{c}eni ceo broj. Zamenjujemo funkciju $F$ bulovskim funkcijama $f_i$, gde $i = 0, 1, /dots , n-1$. Argumenti funkcije $f_{i}$ su $n$ binarnih cifara broja, dok je povratna vrednost $f_{i}$ vrednost $i$-te binarne cifre rezultata funkcije $F$. Drugim re\v{c}ima, svaka od funkcija $f_{i}$ ra\v{c}una jednu cifru rezultata. Kao konkretan primer, s obzirom da su neozna\v{c}eni brojevi u ra\v{c}unarima zauzimaju obi\v{c}no $32$ bita, funkciju:
+Funkcije koje primaju neozna\v{c}eni broj u opsegu $[0,2^{n}-1]$ se mogu zameniti sa $n$ bulovskih funkcija sa $n$ argumenata. Kao primer, neka je data funkcija $F$ koja prima i vra\'c{}a neozna\v{c}eni ceo broj. Zamenjujemo funkciju $F$ bulovskim funkcijama $f_i$, gde $i = 0, 1, \dots , n-1$. Argumenti funkcije $f_{i}$ su $n$ binarnih cifara broja, dok je povratna vrednost $f_{i}$ vrednost $i$-te binarne cifre rezultata funkcije $F$. Drugim re\v{c}ima, svaka od funkcija $f_{i}$ ra\v{c}una jednu cifru rezultata. Kao konkretan primer, s obzirom da su neozna\v{c}eni brojevi u ra\v{c}unarima zauzimaju obi\v{c}no $32$ bita, funkciju:
 
 \begin{lstlisting}[language=C++]
     unsigned F(unsigned n);
