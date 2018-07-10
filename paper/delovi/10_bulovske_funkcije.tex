@@ -1,8 +1,25 @@
 \section{Bulovske funkcije}
 \label{sec:BulovskeFunkcije}
 
+\emph{Bulovske funkcije} su funkcije koje primaju bulovske argumente i vra\'c{}aju bulovsku vrednost. Bulovske vrednosti mogu biti \emph{true} ili \emph{false}. U nastavku \'c{}emo sa $1$ ozna\v{c}avati \emph{true}, a sa $0$ \emph{false}, \v{s}to je uobi\v{c}ajena konvencija.
 
+Za bulovsku funkciju sa $n$ bulovskih argumenata, postoji $2^{n}$ mogu\'c{}ih ulaza. Po\v{s}to je povratna vrednost takodje bulovskog tipa, zaklju\v{c}ujemo da postoji $2^{2^{n}}$ razli\v{c}itih bulovskih funkcija sa $n$ argumenata, \v{s}to se vidi iz slede\'c{}e jednakosti:
 
-\cite{BDD}
+\[ \underbrace{2*2*2* \dotsb *2}_{\text{$2^{n}$}} = 2^{2^{n}} \]
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Funkcije koje primaju neozna\v{c}eni broj u opsegu $[0,2^{n}-1]$ se mogu zameniti sa $n$ bulovskih funkcija sa $n$ argumenata. Kao primer, neka je data funkcija $F$ koja prima i vra\'c{}a neozna\v{c}eni ceo broj. Zamenjujemo funkciju $F$ bulovskim funkcijama $f_i$, gde $i = 0, 1, /dots , n-1$. Argumenti funkcije $f_{i}$ su $n$ binarnih cifara broja, dok je povratna vrednost $f_{i}$ vrednost $i$-te binarne cifre rezultata funkcije $F$. Drugim re\v{c}ima, svaka od funkcija $f_{i}$ ra\v{c}una jednu cifru rezultata. Kao konkretan primer, s obzirom da su neozna\v{c}eni brojevi u ra\v{c}unarima zauzimaju obi\v{c}no $32$ bita, funkciju:
+
+\begin{lstlisting}[language=C++]
+    unsigned F(unsigned n);
+\end{lstlisting}
+
+\noindent mo\v{z}emo zameniti sa $32$ bulovske funkcije:
+
+\begin{lstlisting}[language=C, emph={bool}]
+    bool f0(bool n0, bool n1, bool n2, ... , bool n31);
+    bool f1(bool n0, bool n1, bool n2, ... , bool n31);
+    ...
+    bool f31(bool n0, bool n1, bool n2, ... , bool n31);
+\end{lstlisting}
+
+Naravno, moramo se uveriti da su cifre rezultata zaista jednake izlazima bulovskih funkcija. Jedan na\v{c}in za verifikaciju rezultata je primena obe tehnike nad svim mogu\'c{}im ulazima i poredjenje dobijenih rezultata. Medjutim, \v{c}ak i za ovako jednostavne funkcije re\v{c} je o oko 4 milijarde ($2^{32}$) mogu\'c{}ih ulaza. Drugi na\v{c}in je da se ove funkcije prika\v{z}u putem nekih struktura podataka, i da se funkcije porede tako \v{s}to se porede njihove reprezentacije preko tih strukture. Drugim re\v{c}ima, posmatramo funkcije kao podatke. U poglavljima koji slede \'c{}e biti vi\v{s}e re\v{c}i o strukturama podataka koje se koriste za predstavljanje bulovskih funkcija.

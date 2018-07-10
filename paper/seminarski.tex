@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage[english,serbian]{babel}
 \usepackage[unicode]{hyperref}
+\usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \hypersetup{colorlinks,citecolor=green,filecolor=green,linkcolor=blue,urlcolor=blue}
@@ -18,30 +19,27 @@
 \usepackage{chngcntr}
 \counterwithin{figure}{section}
 \usepackage{listings}
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codeblue}{rgb}{0.0,0,0.82}
-\lstdefinestyle{mystyle}{
-    numbers=left,
-    numberstyle=\scriptsize,
-    numbersep=8pt,
-    commentstyle=\color{codegray},
-    keywordstyle=\color{codegreen},
-    numberstyle=\tiny\color{codeblue},
-    stringstyle=\color{codegreen},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    showspaces=false,
-    showstringspaces=false,
-    showtabs=false,
+\usepackage{textcomp}
+\usepackage{xcolor}
+\lstset {
+    language=C++,
+    frame=single,
     tabsize=4,
-    xleftmargin=3em,
-    framexleftmargin=1.5em
+    showstringspaces=false,
+    upquote=true,
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{eminence},
+    stringstyle=\color{red},
+    basicstyle=\small\ttfamily,
+    emph={int,char,double,float,unsigned,void,bool},
+    emphstyle={\color{blue}},
+    escapechar=\&,
+    % keyword highlighting
+    classoffset=1, % starting new class
+    morekeywords={>,<,.,;,,,-,!,=,~},
+    keywordstyle=\color{weborange},
+    classoffset=0,
 }
-\lstset{style=mystyle}
 
 
 \begin{document}
