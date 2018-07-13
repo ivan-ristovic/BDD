@@ -1,0 +1,27 @@
+\section{Slobodni binarni dijagrami odlu\v{c}ivanja (FBDD)}
+\label{sec:FBDD}
+
+Slobodni binarni dijagrami odlu\v{c}ivanja (engl. \emph{Free Binary Decision Diagrams}, u daljem tekstu \emph{FBDD}) koriste \v{S}enonovu dekompoziciju u svakom \v{c}voru (sli\v{c}no kao kod OBDD) ali se du\v{z} razli\v{c}itih putanja mogu koristiti razli\v{c}ita uredjenja. \v{S}tavi\v{s}e, svaka promenljiva se sme testirati samo jednom. Ukoliko se promenljive biraju istim redosledom du\v{z} svih putanja, rezultat je OBDD. Drugim re\v{c}ima, OBDD su specijalan slu\v{c}aj FBDD. Iako nisu u op\v{s}tem slu\v{c}aju kanoni\v{c}ka struktura, uz modifikacije je mogu\'c{}e posti\'c{}i kanoni\v{c}nost. \v{S}tavi\v{s}e, FBDD se efikasno minimizuju i izlistavaju.
+
+Dokazano je  postojanje funkcija koje se mogu efikasno predstaviti pomo\'c{}u FBDD (u polinomijalnom prostoru), dok je za OBDD u najgorem slu\v{c}aju potreban eksponencijalan broj \v{c}vorova. Glavni problem je nepostojanje efikasne heuristike za odabir redosleda promenljivih. Iako postoji dosta pristupa za re\v{s}avanje pomenutog problema [4, 5, 6], nije pronadjeno zna\v{c}ajno br\v{z}e unapredjenje u odnosu na OBDD.
+
+SAT re\v{s}ava\v{c}i se mogu koristiti za konstrukciju i minimizaciju FBDD. SAT re\v{s}ava\v{c}i se mogu shvatiti kao pretra\v{z}iva\v{c}i binarnog stabla odlu\v{c}ivanja za datu funkciju. U op\v{s}tem slu\v{c}aju, uz fiksni izbor odabira promenljivih u implementaciji SAT re\v{s}ava\v{c}a, drvo koje SAT re\v{s}ava\v{c} pretra\v{z}uje je zapravo OBDD. U slu\v{c}aju nedeterministi\v{c}kog izbora promenljivih, to drvo je FBDD.
+
+U nastavku se podrazumeva da je \v{c}italac upoznat sa terminima iskazne logike. Prvo \'c{}emo, uz kori\v{s}\'c{}enje SAT re\v{s}ava\v{c}a, opisati proces konstrukcije FBDD (deo \ref{subsec:FBDDConstructionViaSAT}), a zatim proces minimizacije FBDD (deo \ref{subsec:?}).
+
+
+\section{Konstrukcija FBDD uz pomo\'c{} SAT re\v{s}ava\v{c}a}
+\label{subsec:FBDDConstructionViaSAT}
+
+SAT re\v{s}ava\v{c}i pronalaze valuaciju $v$ takvu da je $f(v) = 1$ za datu funkciju $f$, ili pokazuju nepostojanje takvog $v$. Tokom procesa pretrage valuacija, prave se razni izbori i implikacije. Posmatranjem procesa pronala\v{z}enja pomenute valuacije mo\v{z}emo definisati osnovne osobine koje proces konstrukcije FBDD mora da ispunjava:
+
+\begin{obsn}
+    Neka je data bulovska funkcija $f : \mathbb{B}^{n} \rightarrow \mathbb{B}$  u KNF normalnoj formi. Tada va\v{z}i:
+    \begin{itemize}
+        \item Svaka valuacija koja zadovoljava $f$ odgovara putu koji vodi ka vrednosti $1$ u FBDD koji predstavlja $f$.
+        \item Svaka konfliktna valuacija odgovara putu koji vodi ka vrednosti $0$ u FBDD koji predstavlja $f$.
+        \item Svaka implikacija $x_{i} = b$, gde je $x \in f, b \in \mathbb{B}$ odgovara putu koji vodi ka vrednosti $0$ u FBDD koji predstavlja $f$. Ovaj put se moze konstruisati koriste\'c{}i trenutnu parcijalnu valuaciju $v$ uz $x_{i} = \overline{b}$.
+    \end{itemize}
+\end{obsn}
+
+% TODO PRIMER?

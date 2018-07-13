@@ -42,6 +42,14 @@
     classoffset=0,
 }
 
+\theoremstyle{plain}
+\newtheorem{thm}{Teorema}[section]
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definicija}
+\newtheorem{exmp}[thm]{Primer}
+\newtheorem{assn}[thm]{Pretpostavka}
+\newtheorem{obsn}[thm]{Zapa\v{z}anje}
+
 
 \begin{document}
 
@@ -61,6 +69,8 @@
 \input{delovi/10_bulovske_funkcije}
 \input{delovi/11_binarna_drveta_odlucivanja}
 \input{delovi/12_bdd}
+\input{delovi/13_obdd}
+\input{delovi/14_fbdd}
 
 \addcontentsline{toc}{section}{Literatura}
 \bibliographystyle{plain}
