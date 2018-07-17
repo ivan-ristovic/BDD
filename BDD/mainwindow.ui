@@ -18,7 +18,7 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pbShow">
     <property name="geometry">
      <rect>
       <x>110</x>
