@@ -7,7 +7,7 @@ Dokazano je  postojanje funkcija koje se mogu efikasno predstaviti pomo\'c{}u FB
 
 SAT re\v{s}ava\v{c}i se mogu koristiti za konstrukciju i minimizaciju FBDD. SAT re\v{s}ava\v{c}i se mogu shvatiti kao pretra\v{z}iva\v{c}i binarnog stabla odlu\v{c}ivanja za datu funkciju. U op\v{s}tem slu\v{c}aju, uz fiksni izbor odabira promenljivih u implementaciji SAT re\v{s}ava\v{c}a, drvo koje SAT re\v{s}ava\v{c} pretra\v{z}uje je zapravo OBDD. U slu\v{c}aju nedeterministi\v{c}kog izbora promenljivih, to drvo je FBDD.
 
-U nastavku se podrazumeva da je \v{c}italac upoznat sa terminima iskazne logike. Prvo \'c{}emo, uz kori\v{s}\'c{}enje SAT re\v{s}ava\v{c}a, opisati proces konstrukcije FBDD (deo \ref{subsec:FBDDConstructionViaSAT}), a zatim proces minimizacije FBDD (deo \ref{subsec:?}).
+U nastavku se podrazumeva da je \v{c}italac upoznat sa terminima iskazne logike. Prvo \'c{}emo, uz kori\v{s}\'c{}enje SAT re\v{s}ava\v{c}a, opisati proces konstrukcije FBDD (deo \ref{subsec:FBDDConstructionViaSAT}), a zatim proces minimizacije FBDD (deo \ref{subsec:FBDDMinimization}).
 
 
 \subsection{Konstrukcija FBDD uz pomo\'c{} SAT re\v{s}ava\v{c}a}
@@ -36,7 +36,7 @@ Kao \v{s}to je prikazano na levom delu slike \ref{diag:FBDDConstruction}, kreira
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.8]{slike/FBDD_Construction.PNG}
+    \includegraphics[scale=0.7]{slike/FBDD_Construction.PNG}
     \caption{Proces konstrukcije FBDD uz pomo\'c{} SAT re\v{s}ava\v{c}a}
     \label{diag:FBDDConstruction}
 \end{figure}
@@ -46,3 +46,15 @@ Kao \v{s}to je prikazano na levom delu slike \ref{diag:FBDDConstruction}, kreira
     \label{exmp:FBDDConstruction2}
     \qed
 \end{exmp}
+
+FBDD dijagrami kreirani ovim postupkom mogu sadr\v{z}ati odredjene izomorfizme u sebi, odnosno ne moraju biti minimalni. U odeljku koji sledi \'c{}e biti vi\v{s}e re\v{c}i o identifikaciji izomorfizama i redukciji FBDD.
+
+
+\subsection{Detekcija izomorfizama i minimizacija FBDD}
+\label{subsec:FBDDMinimization}
+
+FBDD dobijen postupkom opisanim u odeljku \ref{subsec:FBDDConstructionViaSAT} \v{c}esto sadr\v{z}i izomorfne pod-grafove. Za razliku od OBDD, gde se izomorfizmi mogu detektovati veoma brzo zbog fiksnog redosleda promenljivih, FBDD zbog svoje osobine nepostojanja fiksnog redosleda odabira promenljivih ne mogu da koriste iste tehnike za detekciju izomorfizama. Neke od poznatijih tehnika redukcije FBDD su \emph{odse\v{c}ne linije} (engl. \emph{cutlines}) i \emph{odse\v{c}ni skupovi} (engl. \emph{cutsets}) \cite{FBDD}.
+
+Odse\v{c}ne linije se koriste nad KNF formulama dobijenim iz logi\v{c}kih kola. Ukoliko su ulazi u kolo $C$ delimi\v{c}no odredjeni, mogu\'c{}e je odrediti neke od internih signala. Skup internih signala, koji formiraju granicu sa nepoznatim signalima kola $C$, defini\v{s}e odse\v{c}nu liniju. Na implementacionom nivou se implementiraju koriste\'c{}i he\v{s}-tabele, a s obzirom da se sastoje od varijabli mogu se lako reprezentovati preko klauze (sli\v{c}no blokiraju\'c{}im klauzama opisanim u \ref{subsec:FBDDConstructionViaSAT}). Kako bi se odse\v{c}ne linije mogle primeniti u op\v{s}tem slu\v{c}aju, proces pretrage SAT re\v{s}ava\v{c}a bi se morao ograni\v{c}iti.
+
+Odse\v{c}ni skupovi za razliku od odse\v{c}nih linija uzimaju kao ulaz KNF formulu u op\v{s}tem obliku. Deo prostora pretrage koji je ve\'c{} pretra\v{z}en se \v{c}uva kao podskup klauza u kombinaciji sa skupom promenljivih sa dodeljenom vredno\v{s}\'c{}u. Odse\v{c}ni skup je podskup inicijalnog skupa klauza. U njemu se nalaze one klauze koje sadr\v{z}e barem jedan literal kojem je dodeljena vrednost, i barem jedan literal kojem nije dodeljena vrednost, redom. Mo\v{z}e se pokazati da je za detekciju izomorfizama unutar FBDD dovoljno posmatrati odse\v{c}ni skup.
