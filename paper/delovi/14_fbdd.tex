@@ -24,4 +24,25 @@ SAT re\v{s}ava\v{c}i pronalaze valuaciju $v$ takvu da je $f(v) = 1$ za datu funk
     \end{itemize}
 \end{obsn}
 
-% TODO PRIMER?
+\begin{exmp}
+    Neka je data funkcija $f(x_{1}, x_{2}, x_{3}, x_{4}) = (x_{1} \vee x_{2}) \wedge (x_{3} \vee x_{4}) \wedge (x_{1} \vee x_{2} \vee \overline{x_{4}})$. Konstrui\v{s}emo FBDD za datu funkciju $f$ posmatraju\'c{}i korake SAT re\v{s}ava\v{c}a. \v{C}itav proces je prikazan na levom dijagramu na slici \ref{diag:FBDDConstruction}.
+
+    U po\v{c}etku re\v{s}ava\v{c} uz pomo\'c{} heuristike dodeljuje $x_{1}$ vrednost $0$ \textit{(a)}. Ovo dovodi do toga da $x_{2}$ mora imati vrednost $1$ \textit{(b)} kako bi klauza $x_{1} \vee x_{2}$ bila zadovoljena. S obzirom da smo upravo iskoristili implikaciju, zaklju\v{c}ujemo da je valuacija u kojoj je $x_{1} = 0$ i $x_{2} = 0$ konfliktna, odnosno $f(0, 0, x_{3}, x_{4}) = 0$ \textit{(c)}. U slede\'c{}em koraku sli\'c{}no kao na po\v{c}etku se bira vrednost za $x_{3}$, na primer $0$. Ovakva dodela nas dovodi do konflikta \textit{(d)}. Uzimaju\'c{}i vrednost $1$ za promenljivu $x_{3}$, sve klauze su zadovoljene bez obzira na vrednost promenljive $x_{4}$ \textit{(e)}. S obzirom da je pronadjena zadovoljavaju\'c{}a valuacija, SAT re\v{s}ava\v{c} prestaje s radom.
+    \label{exmp:FBDDConstruction1}
+    \qed
+\end{exmp}
+
+Kao \v{s}to je prikazano na levom delu slike \ref{diag:FBDDConstruction}, kreiran je parcijalni FBDD funkcije koriste\'c{}i SAT re\v{s}ava\v{c} koji je prona\v{s}ao jednu valuaciju u kojoj funkcija $f$ ima vrednost $1$. S obzirom da \v{z}elimo kompletni FBDD, potrebno je da istra\v{z}imo i ostale putanje (tzv. \emph{All Solution SAT}). Ovo se posti\v{z}e dodavanjem \emph{blokiraju\'c{}e klauze} u skup klauza koje SAT re\v{s}ava\v{c} poku\v{s}ava da zadovolji svaki put kad se pronadje valuacija koja zadovoljava teku\'c{}i skup klauza. U primeru \ref{exmp:FBDDConstruction1}, s obzirom da je pronadjena valuacija $\{0, 1, 1, x_{4}\}$, formira se blokiraju\'c{}a klauza $(x_{1} \vee \overline{x_{2}} \vee \overline{x_{3}})$ i pretraga se nastavlja (primer \ref{exmp:FBDDConstruction2}). Rezultat pretrage \v{c}itavog prostora vrednosti se mo\v{z}e videti na desnom delu slike \ref{diag:FBDDConstruction}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.8]{slike/FBDD_Construction.PNG}
+    \caption{Proces konstrukcije FBDD uz pomo\'c{} SAT re\v{s}ava\v{c}a}
+    \label{diag:FBDDConstruction}
+\end{figure}
+
+\begin{exmp}
+    Nastavljamo sa konstrukcijom FBDD iz primera \ref{exmp:FBDDConstruction1} dodaju\'c{}i blokiraju\'c{}u klauzu $(x_{1} \vee \overline{x_{2}} \vee \overline{x_{3}})$. Ona izaziva konflikt i povratak (engl. \emph{backtracking}) do $x_{1}$, zaklju\v{c}uju\'c{}i $x_{1} = 1$ \textit{(f)} kako bi se zadovoljila tre\'c{}a klauza. Slede\'c{}i korak je dodela $x_{4} = 0$ \textit{(g)} koja dovodi do jedne zadovoljavaju\'c{}e \textit{(h)} i jedne konfliktne valuacije \textit{(i)} zbog druge klauze. Zadovoljavaju\'c{}a valuacija se koristi kako bi se formirala blokiraju\'c{}a klauza $(\overline{x_{1}} \vee x_{3} \vee \overline{x_{4}})$. Povratkom se dolazi do $x_{4}$ i pronalazi se poslednje re\v{s}enje \textit{(j)}. S obzirom da je pretra\v{z}en ceo prostor, pretraga se zaustavlja i FBDD je konstruisan. Napomenimo da su neke grane ve\'c{} bile prisutne u dijagramu, stoga nisu zapravo dodate (koraci \textit{(h)} i \textit{(i)}).
+    \label{exmp:FBDDConstruction2}
+    \qed
+\end{exmp}
