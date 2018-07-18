@@ -338,13 +338,13 @@
      <string/>
     </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>10</y>
-      <width>431</width>
-      <height>441</height>
+      <y>20</y>
+      <width>421</width>
+      <height>381</height>
      </rect>
     </property>
    </widget>

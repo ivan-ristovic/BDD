@@ -33,6 +33,16 @@ std::ostream &BDDNode::print(std::ostream &out) const
     return out;
 }
 
+void BDDNode::draw(QGraphicsScene *scene, qreal xpos, qreal ypos, unsigned level)
+{
+    m_node = std::make_shared<NodeItem>(xpos, ypos, m_var, m_value);
+    scene->addItem(m_node.get());
+    if (m_var) {
+        m_high->draw(scene, xpos + 80 / level, ypos + 30, level + 1);
+        m_low->draw(scene, xpos - 80 / level, ypos + 30, level + 1);
+    }
+}
+
 void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned level)
 {
     // check if we are at correct level

@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    bdd.cpp
+    bdd.cpp \
+    nodeitem.cpp
 
 HEADERS += \
         mainwindow.h \
-    bdd.h
+    bdd.h \
+    nodeitem.h
 
 FORMS += \
         mainwindow.ui

@@ -2,17 +2,21 @@
 #include "ui_mainwindow.h"
 #include "bdd.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     connect(ui->pbShow, SIGNAL(clicked()), this, SLOT(drawTree()));
+
+    scene = new QGraphicsScene(ui->graphicsView);
+    ui->graphicsView->setScene(scene);
 }
 
 MainWindow::~MainWindow()
 {
+    delete scene;
     delete ui;
 }
 
@@ -26,4 +30,6 @@ void MainWindow::drawTree()
     std::cout << m_bdd << std::endl;
 
     // draw
+    scene->clear();
+    m_bdd->draw(scene, 100, 0);
 }

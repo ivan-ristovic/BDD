@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <iostream>
-
+#include <QGraphicsScene>
+#include "nodeitem.h"
 
 using Variable = unsigned;
 
@@ -18,6 +19,7 @@ public:
 
     void insert(Variable v, bool highValue = true, bool lowValue = false);
     std::ostream& print(std::ostream& out) const;
+    void draw(QGraphicsScene *scene, qreal xpos, qreal ypos, unsigned level = 1);
 
 private:
 
@@ -27,6 +29,7 @@ private:
     BDD m_low;
     BDD m_high;
     Variable m_var;
+    NodeGraphic m_node;
 };
 
 std::ostream& operator<<(std::ostream& out, const BDD &bdd);
