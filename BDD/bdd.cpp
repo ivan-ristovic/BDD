@@ -12,11 +12,13 @@ BDDNode::BDDNode(Variable v, bool highValue, bool lowValue)
         m_high->m_value = highValue;
         m_low->m_value = lowValue;
     }
+
 }
 
 void BDDNode::insert(Variable v, bool highValue, bool lowValue)
 {
-    insertInternal(v, highValue, lowValue, m_var - 1);
+    insertInternal(v, highValue, lowValue, GlobalDepth);
+    GlobalDepth.fetch_add(1);
 }
 
 #include <QDebug>

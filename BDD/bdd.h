@@ -11,6 +11,7 @@ using Variable = unsigned;
 class BDDNode;
 using BDD = std::shared_ptr<BDDNode>;
 
+static std::atomic<int> GlobalDepth(0);
 
 class BDDNode : public std::enable_shared_from_this<BDDNode>
 {
