@@ -11,8 +11,6 @@ using Variable = unsigned;
 class BDDNode;
 using BDD = std::shared_ptr<BDDNode>;
 
-static std::atomic<int> GlobalDepth(0);
-
 class BDDNode : public std::enable_shared_from_this<BDDNode>
 {
 public:
@@ -30,7 +28,8 @@ private:
     BDD m_low;
     BDD m_high;
     Variable m_var;
-    NodeGraphic m_node;
+    NodeItem *m_node;
+    std::atomic<unsigned> m_depth;
 };
 
 std::ostream& operator<<(std::ostream& out, const BDD &bdd);

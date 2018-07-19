@@ -4,6 +4,8 @@ BDDNode::BDDNode(Variable v, bool highValue, bool lowValue)
     : m_low(nullptr)
     , m_high(nullptr)
     , m_var(v)
+    , m_node(nullptr)
+    , m_depth(0)
 {
     // if this is a variable node, automatically add leaves as children
     if (m_var) {
@@ -17,8 +19,8 @@ BDDNode::BDDNode(Variable v, bool highValue, bool lowValue)
 
 void BDDNode::insert(Variable v, bool highValue, bool lowValue)
 {
-    insertInternal(v, highValue, lowValue, GlobalDepth);
-    GlobalDepth.fetch_add(1);
+    insertInternal(v, highValue, lowValue, m_depth);
+    m_depth.fetch_add(1);
 }
 
 #include <QDebug>
@@ -37,8 +39,8 @@ std::ostream &BDDNode::print(std::ostream &out) const
 
 void BDDNode::draw(QGraphicsScene *scene, qreal xpos, qreal ypos, unsigned level)
 {
-    m_node = std::make_shared<NodeItem>(xpos, ypos, m_var, m_value);
-    scene->addItem(m_node.get());
+    m_node = new NodeItem(xpos, ypos, m_var, m_value);
+    scene->addItem(m_node);
     if (m_var) {
         m_high->draw(scene, xpos + 80 / level, ypos + 30, level + 1);
         m_low->draw(scene, xpos - 80 / level, ypos + 30, level + 1);

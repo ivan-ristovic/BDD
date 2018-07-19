@@ -22,6 +22,4 @@ private:
     bool m_val;
 };
 
-using NodeGraphic = std::shared_ptr<NodeItem>;
-
 #endif // NODEITEM_H
