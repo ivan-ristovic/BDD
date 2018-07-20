@@ -1,20 +1,51 @@
 #include "bdd.h"
+#include <QBrush>
+#include <QPen>
 
-BDDNode::BDDNode(Variable v, bool highValue, bool lowValue)
+BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
     : m_low(nullptr)
     , m_high(nullptr)
-    , m_var(v)
-    , m_node(nullptr)
     , m_depth(0)
+    , m_var(v)
 {
+    setPos(x, y);
+
     // if this is a variable node, automatically add leaves as children
     if (m_var) {
-        m_high = std::make_shared<BDDNode>(0);
-        m_low = std::make_shared<BDDNode>(0);
+        m_high = new BDDNode(x + X_OFFSET / m_var, y + Y_OFFSET, 0);
+        m_low = new BDDNode(x - X_OFFSET / m_var, y + Y_OFFSET, 0);
         m_high->m_value = highValue;
         m_low->m_value = lowValue;
     }
+}
 
+void BDDNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+    painter->setBrush(QBrush(Qt::yellow));
+    painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
+    if (m_var) {
+        painter->drawText(5, 18, QString::fromStdString("X" + std::to_string(m_var)));
+        QPen pen = QPen(QBrush(Qt::blue), 2);
+        painter->setPen(pen);
+        painter->drawLine(25, 20, m_high->x() - x() + 10, m_high->y() - y());
+        pen.setStyle(Qt::DotLine);
+        painter->setPen(pen);
+        painter->drawLine(0, 20, m_low->x() - x() + 15, m_low->y() - y());
+    } else {
+        painter->drawText(8, 18, QString::fromStdString(m_value ? "T" : "F"));
+    }
+}
+
+QRectF BDDNode::boundingRect() const
+{
+    return QRectF(0, 0, NODE_RADIUS, NODE_RADIUS);
+}
+
+QPainterPath BDDNode::shape() const
+{
+    QPainterPath path;
+    path.addRect(0, 0, NODE_RADIUS, NODE_RADIUS);
+    return path;
 }
 
 void BDDNode::insert(Variable v, bool highValue, bool lowValue)
@@ -37,13 +68,12 @@ std::ostream &BDDNode::print(std::ostream &out) const
     return out;
 }
 
-void BDDNode::draw(QGraphicsScene *scene, qreal xpos, qreal ypos, unsigned level)
+void BDDNode::draw(QGraphicsScene *scene)
 {
-    m_node = new NodeItem(xpos, ypos, m_var, m_value);
-    scene->addItem(m_node);
+    scene->addItem(this);
     if (m_var) {
-        m_high->draw(scene, xpos + 80 / level, ypos + 30, level + 1);
-        m_low->draw(scene, xpos - 80 / level, ypos + 30, level + 1);
+        m_low->draw(scene);
+        m_high->draw(scene);
     }
 }
 
@@ -52,8 +82,8 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
     // check if we are at correct level
     if (level == 0) {
         // if yes, add new variable node to both children pointers
-        m_high = std::make_shared<BDDNode>(v, highValue, lowValue);
-        m_low = std::make_shared<BDDNode>(v, highValue, lowValue);
+        m_high = new BDDNode(x() + X_OFFSET / m_var, y() + Y_OFFSET, v, highValue, lowValue);
+        m_low = new BDDNode(x() - X_OFFSET / m_var, y() + Y_OFFSET, v, highValue, lowValue);
     } else {
         // if not, recursively insert into both subtrees
         m_high->insertInternal(v, highValue, lowValue, level - 1);
@@ -61,7 +91,7 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
     }
 }
 
-std::ostream &operator<<(std::ostream &out, const BDD &bdd)
+std::ostream &operator<<(std::ostream &out, const BDDNode *bdd)
 {
     return bdd->print(out);
 }

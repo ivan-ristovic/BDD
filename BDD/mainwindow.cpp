@@ -23,8 +23,7 @@ MainWindow::~MainWindow()
 void MainWindow::drawTree()
 {
     // create tree
-    m_bdd.reset();
-    m_bdd = std::make_shared<BDDNode>(1);
+    m_bdd = new BDDNode(0, 0, 1);
     m_bdd->insert(2);
     m_bdd->insert(3);
 
@@ -32,5 +31,5 @@ void MainWindow::drawTree()
 
     // draw
     scene->clear();
-    m_bdd->draw(scene, 100, 0);
+    m_bdd->draw(scene);
 }

@@ -4,34 +4,43 @@
 #include <memory>
 #include <iostream>
 #include <QGraphicsScene>
-#include "nodeitem.h"
+#include <QObject>
+#include <QGraphicsObject>
+#include <QPainter>
 
 using Variable = unsigned;
 
-class BDDNode;
-using BDD = std::shared_ptr<BDDNode>;
-
-class BDDNode : public std::enable_shared_from_this<BDDNode>
+class BDDNode : public QGraphicsObject
 {
+    Q_OBJECT
+
+private:
+    static constexpr int X_OFFSET = 100;
+    static constexpr int Y_OFFSET = 50;
+    static constexpr int NODE_RADIUS = 25;
+
 public:
-    BDDNode(Variable v, bool highValue = true, bool lowValue = false);
+    BDDNode(qreal x, qreal y, Variable v, bool highValue = true, bool lowValue = false);
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
 
     void insert(Variable v, bool highValue = true, bool lowValue = false);
     std::ostream& print(std::ostream& out) const;
-    void draw(QGraphicsScene *scene, qreal xpos, qreal ypos, unsigned level = 1);
+    void draw(QGraphicsScene *scene);
 
 private:
 
     void insertInternal(Variable v, bool highValue, bool lowValue, unsigned level);
 
-    bool m_value;
-    BDD m_low;
-    BDD m_high;
-    Variable m_var;
-    NodeItem *m_node;
+    BDDNode *m_low;
+    BDDNode *m_high;
     std::atomic<unsigned> m_depth;
+    Variable m_var;
+    bool m_value;
 };
 
-std::ostream& operator<<(std::ostream& out, const BDD &bdd);
+std::ostream& operator<<(std::ostream& out, const BDDNode *bdd);
 
 #endif // BDD_H
