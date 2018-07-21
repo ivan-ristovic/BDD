@@ -1,4 +1,20 @@
-\section{Uredjeni binarni dijagrami odlu\v{c}ivanja (OBDD)}
+\section{Redukovani uredjeni binarni dijagrami odlu\v{c}ivanja (ROBDD)}
 \label{sec:OBDD}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Uredjeni binarni dijagrami odlu\v{c}ivanja (engl. \emph{Ordered Binary Decision Diagrams}, u daljem tekstu \emph{OBDD}) su BDD u kojima se promenljive uvek testiraju u istom redosledu. OBDD se naziva \emph{redukovano}(engl. \emph{Reduced Ordered Binary Decision Diagrams} \cite{ROBDD}, u daljem tekstu \emph{ROBDD}) ukoliko ima slede\'c{}e osobine:
+\begin{itemize}
+    \item Neredundantnost - Visoko i nisko podstablo svakog \v{c}vora je razli\v{c}ito.
+    \item Jedinstvenost - Ne postoje dva razli\v{c}ita \v{c}vora koja testiraju istu promenljivu, a \v{c}ija su podstabla ista.
+\end{itemize}
+
+Kao \v{s}to je pomenuto u poglavlju \ref{sec:BinarnaDrvetaOdlucivanja}, binarna drveta odlu\v{c}ivanja poseduju osobinu kanoni\v{c}nosti. Medjutim, kako postoje razli\v{c}ita BDD koja odgovaraju jednom binarnom drvetu odlu\v{c}ivanja, jasno je da BDD nemaju ovu osobinu. Uprkos tome, zbog svojih lepih i jasno definisanih osobina, ROBDD je takodje kanoni\v{c}no. Pro\v{s}irivanjem definicije kanoni\v{c}nosti na ROBDD, dobijamo tvrdjenje: kanoni\v{c}nost ROBDD zna\v{c}i da za fiksan redosled promenljivih, svaka bulovska funkcija ima jedinstvenu reprezentaciju u vidu ROBDD. Ovo zna\v{c}i da mo\v{z}emo uporediti bulovske funkcije konstrukcijom njihovih ROBDD, a ukoliko su ona jednaka, to garantuje njihovu ekvivalentnost.
+
+ROBDD ima najvi\v{s}e dva lista: 0 i 1. U nastavku \'c{}emo ponekad crtati oba, kako bi se smanjila kompleksnost njhovog grafi\v{c}kog prikaza.
+
+
+
+\subsection{Konstrukcija ROBDD}
+\label{subsec:ROBDDConstruction}
+
+Lalala konstrukcija Lalala
+
