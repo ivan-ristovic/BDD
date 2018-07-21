@@ -22,6 +22,9 @@ BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
 
 void BDDNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    QBrush b;
+    m_value ? b = Qt::yellow : b = Qt::red;
+
     if (m_var) {
         QPen pen = QPen(QBrush(Qt::GlobalColor::blue), 2);
         painter->setPen(pen);
@@ -34,7 +37,7 @@ void BDDNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget
         painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
         painter->drawText(5, 18, QString::fromStdString("X" + std::to_string(m_var)));
     } else {
-        painter->setBrush(QBrush(Qt::yellow));
+        painter->setBrush(b);
         painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
         painter->drawText(8, 18, QString::fromStdString(m_value ? "T" : "F"));
     }
@@ -84,7 +87,7 @@ void BDDNode::updateValues(std::vector<bool> &values, const std::vector<const QC
 {
     if (m_var) {
         values.push_back(false);
-        m_high->updateValues(values, checkboxes);
+        m_low->updateValues(values, checkboxes);
         values.pop_back();
         values.push_back(true);
         m_high->updateValues(values, checkboxes);
