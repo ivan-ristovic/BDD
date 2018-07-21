@@ -21,17 +21,20 @@ BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
 
 void BDDNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->setBrush(QBrush(Qt::yellow));
-    painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
     if (m_var) {
+        QPen pen = QPen(QBrush(Qt::GlobalColor::blue), 2);
+        painter->setPen(pen);
+        painter->drawLine(NODE_RADIUS / 2, NODE_RADIUS / 2, m_high->x() - x() + NODE_RADIUS / 2, m_high->y() - y() + NODE_RADIUS / 2);
+        pen.setStyle(Qt::PenStyle::DotLine);
+        painter->setPen(pen);
+        painter->drawLine(NODE_RADIUS / 2, NODE_RADIUS / 2, m_low->x() - x() + NODE_RADIUS / 2, m_low->y() - y() + NODE_RADIUS / 2);
+        painter->setBrush(QBrush(Qt::yellow));
+        painter->setPen(Qt::PenStyle::SolidLine);
+        painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
         painter->drawText(5, 18, QString::fromStdString("X" + std::to_string(m_var)));
-        QPen pen = QPen(QBrush(Qt::blue), 2);
-        painter->setPen(pen);
-        painter->drawLine(25, 20, m_high->x() - x() + 10, m_high->y() - y());
-        pen.setStyle(Qt::DotLine);
-        painter->setPen(pen);
-        painter->drawLine(0, 20, m_low->x() - x() + 15, m_low->y() - y());
     } else {
+        painter->setBrush(QBrush(Qt::yellow));
+        painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
         painter->drawText(8, 18, QString::fromStdString(m_value ? "T" : "F"));
     }
 }
