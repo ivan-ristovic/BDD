@@ -22,7 +22,7 @@
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>280</y>
+      <y>320</y>
       <width>101</width>
       <height>25</height>
      </rect>
@@ -37,9 +37,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>300</width>
+      <x>30</x>
+      <y>50</y>
+      <width>150</width>
       <height>262</height>
      </rect>
     </property>
@@ -55,6 +55,9 @@
     <property name="selectionMode">
      <enum>QAbstractItemView::NoSelection</enum>
     </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>50</number>
+    </attribute>
     <attribute name="verticalHeaderVisible">
      <bool>false</bool>
     </attribute>
@@ -237,8 +240,8 @@
    <widget class="QCheckBox" name="cbV1">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>30</y>
+      <x>240</x>
+      <y>75</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -250,8 +253,8 @@
    <widget class="QCheckBox" name="cbV2">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>60</y>
+      <x>240</x>
+      <y>105</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -263,8 +266,8 @@
    <widget class="QCheckBox" name="cbV3">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>90</y>
+      <x>240</x>
+      <y>135</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -276,8 +279,8 @@
    <widget class="QCheckBox" name="cbV4">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>120</y>
+      <x>240</x>
+      <y>165</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -289,8 +292,8 @@
    <widget class="QCheckBox" name="cbV5">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>150</y>
+      <x>240</x>
+      <y>195</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -302,8 +305,8 @@
    <widget class="QCheckBox" name="cbV7">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>210</y>
+      <x>240</x>
+      <y>255</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -315,8 +318,8 @@
    <widget class="QCheckBox" name="cbV8">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>240</y>
+      <x>240</x>
+      <y>285</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -328,8 +331,8 @@
    <widget class="QCheckBox" name="cbV6">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>180</y>
+      <x>240</x>
+      <y>225</y>
       <width>92</width>
       <height>23</height>
      </rect>
@@ -344,8 +347,34 @@
       <x>360</x>
       <y>20</y>
       <width>421</width>
-      <height>381</height>
+      <height>391</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbReduce">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>410</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Reduce</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>53</y>
+      <width>135</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>f(Var1, Var2, Var3)</string>
     </property>
    </widget>
   </widget>

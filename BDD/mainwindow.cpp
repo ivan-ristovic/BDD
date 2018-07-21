@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
+
+    ui->pbReduce->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +43,8 @@ void MainWindow::drawTree()
     scene->clear();
     m_bdd->draw(scene);
     updateTree();
+
+    ui->pbReduce->setEnabled(true);
 }
 
 void MainWindow::updateTree()
@@ -62,4 +66,11 @@ void MainWindow::updateTree()
     std::vector<bool> valueStack;
 
     m_bdd->updateValues(valueStack, checkboxes);
+}
+
+void MainWindow::reduce()
+{
+    ui->pbReduce->setEnabled(false);
+
+    // add tree reduce logic here
 }
