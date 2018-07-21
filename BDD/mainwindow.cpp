@@ -19,11 +19,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cbV6, SIGNAL(clicked()), this, SLOT(updateTree()));
     connect(ui->cbV7, SIGNAL(clicked()), this, SLOT(updateTree()));
     connect(ui->cbV8, SIGNAL(clicked()), this, SLOT(updateTree()));
+    connect(ui->pbReduce, SIGNAL(clicked()), this, SLOT(reduceTree()));
 
     scene = new QGraphicsScene(ui->graphicsView);
     ui->graphicsView->setScene(scene);
 
-    ui->pbReduce->setEnabled(false);
+    ui->pbReduce->setEnabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -68,9 +69,7 @@ void MainWindow::updateTree()
     m_bdd->updateValues(valueStack, checkboxes);
 }
 
-void MainWindow::reduce()
+void MainWindow::reduceTree()
 {
-    ui->pbReduce->setEnabled(false);
-
-    // add tree reduce logic here
+    m_bdd->reduce();
 }

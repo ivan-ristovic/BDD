@@ -1,6 +1,8 @@
 #include "bdd.h"
 #include <QBrush>
 #include <QPen>
+#include <QThread>
+#include <QPair>
 #include <QDebug>
 
 BDDNode::BDDNode(qreal x, qreal y, Variable v)
@@ -97,4 +99,121 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
         m_high->insertInternal(v, highValue, lowValue, level - 1);
         m_low->insertInternal(v, highValue, lowValue, level - 1);
     }
+}
+
+
+void BDDNode::reduce()
+{
+    bool bddChanged = true;
+    //while (bddChanged) // TODO figure out why the pointers are not updated
+    {
+        bddChanged = this->merge(this);
+        if (!bddChanged)
+        {
+            bddChanged = this->eliminate();
+        }
+
+        if (bddChanged)
+        {
+            // If there was a change, update the bddin 1s and have simulaton of reduction algorithm.
+            QThread::sleep(1);
+            update();
+        }
+    }
+}
+
+
+bool BDDNode::merge(BDDNode* root)
+{
+    if (m_var == 0)
+    {
+        return false;
+    }
+
+    bool l = m_low->merge(root);
+    if (l)
+        return true;
+    bool h = m_high->merge(root);
+    if (h)
+        return true;
+
+    QPair<BDDNode*, BDDNode*> i = this->findIsomorph(root, nullptr);
+    if (i.first != nullptr)
+    {
+        // TODO free subtree
+        if (*(i.second->m_low) == *(i.first))
+        {
+            // free(i.second->m_low)
+            i.second->m_low = this;
+        }
+        else
+        {
+            // free(i.second->m_high)
+            i.second->m_high = this;
+        }
+        // THINK: pointer to parent?
+        return true;
+    }
+
+    return false;
+}
+
+QPair<BDDNode*, BDDNode*> BDDNode::findIsomorph(BDDNode* root, BDDNode* parent)
+{
+    QPair<BDDNode*, BDDNode*> result(nullptr, nullptr);
+
+    if (parent != nullptr && isIsomorph(root))
+    {
+        result.first = root;
+        result.second = parent;
+        return result;
+    }
+    if (root->m_var != 0)
+    {
+        result = findIsomorph(root->m_low, root);
+        if (result.first == nullptr)
+            result = findIsomorph(root->m_high, root);
+    }
+    return result;
+}
+
+
+bool BDDNode::isIsomorph(BDDNode* other)
+{
+    // same node
+    if (this == other)
+        return false;
+    if (other == nullptr)
+        return false;
+    // vars are different
+    if (m_var != other->m_var)
+        return false;
+    // leafs
+    if (m_var == 0)
+    {
+        if (other->m_var == 0 && m_value == other->m_value)
+            return true;
+        else
+            return false;
+    }
+
+    bool l = this->m_low->isIsomorph(other->m_low);
+    bool r = false;
+    if (l)
+        r = this->m_high->isIsomorph(other->m_high);
+
+    return l || r;
+}
+
+bool BDDNode::eliminate()
+{
+    // TODO add elimination rule here
+    return false;
+}
+
+bool BDDNode::operator==(const BDDNode& other) const
+{
+    if (typeid(*this) != typeid(other))
+        return false;
+    return m_var == other.m_var && (m_var == 0 ? m_value == other.m_value : true );
 }

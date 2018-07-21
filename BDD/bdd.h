@@ -30,10 +30,17 @@ public:
     void insert(Variable v, bool highValue = true, bool lowValue = false);
     void draw(QGraphicsScene *scene);
     void updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes);
+    void reduce();
+    bool operator==(const BDDNode& other) const;
 
 private:
 
     void insertInternal(Variable v, bool highValue, bool lowValue, unsigned level);
+    bool merge(BDDNode *root);
+    QPair<BDDNode *, BDDNode *> findIsomorph(BDDNode* root, BDDNode *parent);
+    bool isIsomorph(BDDNode* other);
+
+    bool eliminate();
 
     BDDNode *m_low;
     BDDNode *m_high;

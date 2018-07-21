@@ -20,7 +20,7 @@ public:
 private slots:
     void drawTree();
     void updateTree();
-    void reduce();
+    void reduceTree();
 
 private:
     Ui::MainWindow *ui;
