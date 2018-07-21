@@ -1,6 +1,7 @@
 #include "bdd.h"
 #include <QBrush>
 #include <QPen>
+#include <QDebug>
 
 BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
     : m_low(nullptr)
@@ -57,7 +58,6 @@ void BDDNode::insert(Variable v, bool highValue, bool lowValue)
     m_depth.fetch_add(1);
 }
 
-#include <QDebug>
 std::ostream &BDDNode::print(std::ostream &out) const
 {
     qDebug() << "printing node with var: " << m_var;
@@ -77,6 +77,22 @@ void BDDNode::draw(QGraphicsScene *scene)
     if (m_var) {
         m_low->draw(scene);
         m_high->draw(scene);
+    }
+}
+
+void BDDNode::updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes)
+{
+    if (m_var) {
+        values.push_back(false);
+        m_high->updateValues(values, checkboxes);
+        values.pop_back();
+        values.push_back(true);
+        m_high->updateValues(values, checkboxes);
+        values.pop_back();
+    } else {
+        m_value = checkboxes[4 * values[0] + 2 * values[1] + values[2]]->isChecked();
+        update();
+        qDebug() << values[0] << '\t' << values[1] << '\t' << values[2] << "\t :" << m_value;
     }
 }
 

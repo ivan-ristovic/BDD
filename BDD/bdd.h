@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QGraphicsObject>
 #include <QPainter>
+#include <QCheckBox>
 
 using Variable = unsigned;
 
@@ -29,6 +30,7 @@ public:
     void insert(Variable v, bool highValue = true, bool lowValue = false);
     std::ostream& print(std::ostream& out) const;
     void draw(QGraphicsScene *scene);
+    void updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes);
 
 private:
 
