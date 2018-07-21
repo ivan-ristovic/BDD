@@ -16,5 +16,53 @@ ROBDD ima najvi\v{s}e dva lista: 0 i 1. U nastavku \'c{}emo ponekad crtati oba, 
 \subsection{Konstrukcija ROBDD}
 \label{subsec:ROBDDConstruction}
 
-Lalala konstrukcija Lalala
+ROBDD se mo\v{z}e konstruisati na vi\v{s}e na\v{c}ina. U ovom poglavlju \'c{}e najpre \'c{}e biti opisana naivna metoda konstrukcije (videti \ref{subsubsec:naiveROBDDConstruction}), a zatim \'c{}e ukratko biti opisana efikasnija metoda (videti \ref{subsubsec:optimalROBDDConstruction}).
+
+
+\subsubsection{Naivna konstrukcija ROBDD}
+\label{subsubsec:naiveROBDDConstruction}
+
+Najjednostavniji na\v{c}in da se konstrui\v{s}e ROBDD je da se najpre konstrui\v{s}e ekvivalentno uredjeno binarno drvo odlu\v{c}ivanja. Nakon toga se primenjuju slede\'c{}a pravila dokle god ona menjaju postoju\'c{}i dijagram:
+\begin{itemize}
+    \item Pravilo spajanja - Svaka dva podstabla koja imaju izomorfan BDD se spajaju. U baznom slu\v{c}aju to predstavlja spajanje listova koji imaju iste vrednosti.
+    \item Pravilo eliminacije - Ukoliko su i visoko i nisko pod-drvo ista, bazni \v{c}vor se uklanja.
+\end{itemize}
+Ova pravila su ilustrovana slikama \ref{fig:eliminationRule} i \ref{fig:reductionRule}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{slike/pravilo_spajanja.PNG}
+    \caption{Pravilo spajanja}
+    \label{fig:reductionRule}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{slike/pravilo_eliminacije.PNG}
+    \caption{Pravilo eliminacije}
+    \label{fig:eliminationRule}
+\end{figure}
+
+Mana naivnog pristupa konstrukciji ROBDD je \v{s}to je on uvek eksponencijalne slo\v{z}enosti. Razlog za to je \v{s}to je kostrukcija kompletnog binarnog drveta odlu\v{c}ivanja skupa operacija, koja, pored velike vremenske slo\v{z}enosti, zauzima i eksponencijalno veliku koli\v{c}inu memorije u odnosu na broj promenljivih u ulaznoj formuli.
+
+\begin{exmp}
+    TODO
+    Kada uradimo redukciju u programcicu, mozemo da ubazimo slicice
+\end{exmp}
+
+
+\subsubsection{Optimalna konstrukcija ROBDD}
+\label{subsubsec:optimalROBDDConstruction}
+
+Drugi na\v{c}in na koji je mogu\'c{}e konstruisati ROBDD takodje ima eksponencijalnu slo\v{z}enost. Medjutim, u praksi on daje dobre rezultate. Za razliku od prethodne metode, preska\v{c}e se medjukorak generisanja binarnog uredjenog drveta odlu\v{c}ivanja. Ovo dovodi do smanjenja potrebne memorije za njegovo generisanje, kao i do zna\v{c}ajnog ubrzanja algoritma.
+
+Postupak je rekurzivan: kre\'c{}e se od bulovske funkcije koja se podeli na podfunkcije za koje se najpre generise ROBDD. Naredni korak je spajanje ove dve funkcije u jednu, uz kori\v{s}\'c{}enje pravila eliminacije i spajanja koja su opisana u prethodnoj sekciji.
+
+Naredni primer oslikava efikasnu metodu za generisanje ROBDD.
+
+\begin{exmp}
+    TODO
+\end{exmp}
+
+
 
