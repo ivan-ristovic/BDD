@@ -37,11 +37,10 @@ void MainWindow::drawTree()
     m_bdd->insert(2);
     m_bdd->insert(3);
 
-    // std::cout << m_bdd << std::endl;
-
     // draw
     scene->clear();
     m_bdd->draw(scene);
+    updateTree();
 }
 
 void MainWindow::updateTree()
@@ -61,8 +60,6 @@ void MainWindow::updateTree()
     checkboxes.push_back(ui->cbV8);
 
     std::vector<bool> valueStack;
-
-    qDebug() << "------------------------------------";
 
     m_bdd->updateValues(valueStack, checkboxes);
 }

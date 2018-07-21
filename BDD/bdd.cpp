@@ -3,7 +3,7 @@
 #include <QPen>
 #include <QDebug>
 
-BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
+BDDNode::BDDNode(qreal x, qreal y, Variable v)
     : m_low(nullptr)
     , m_high(nullptr)
     , m_depth(0)
@@ -15,8 +15,8 @@ BDDNode::BDDNode(qreal x, qreal y, Variable v, bool highValue, bool lowValue)
     if (m_var) {
         m_high = new BDDNode(x + X_OFFSET / m_var, y + Y_OFFSET, 0);
         m_low = new BDDNode(x - X_OFFSET / m_var, y + Y_OFFSET, 0);
-        m_high->m_value = highValue;
-        m_low->m_value = lowValue;
+        m_high->m_value = false;
+        m_low->m_value = false;
     }
 }
 
@@ -61,19 +61,6 @@ void BDDNode::insert(Variable v, bool highValue, bool lowValue)
     m_depth.fetch_add(1);
 }
 
-std::ostream &BDDNode::print(std::ostream &out) const
-{
-    qDebug() << "printing node with var: " << m_var;
-    if (m_var) {
-        m_low->print(out);
-        out << " (x" << m_var << ") ";
-        m_high->print(out);
-    } else {
-        out << (m_value ? "T" : "F");
-    }
-    return out;
-}
-
 void BDDNode::draw(QGraphicsScene *scene)
 {
     scene->addItem(this);
@@ -95,7 +82,6 @@ void BDDNode::updateValues(std::vector<bool> &values, const std::vector<const QC
     } else {
         m_value = checkboxes[4 * values[0] + 2 * values[1] + values[2]]->isChecked();
         update();
-        qDebug() << values[0] << '\t' << values[1] << '\t' << values[2] << "\t :" << m_value;
     }
 }
 
@@ -104,16 +90,11 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
     // check if we are at correct level
     if (level == 0) {
         // if yes, add new variable node to both children pointers
-        m_high = new BDDNode(x() + X_OFFSET / m_var, y() + Y_OFFSET, v, highValue, lowValue);
-        m_low = new BDDNode(x() - X_OFFSET / m_var, y() + Y_OFFSET, v, highValue, lowValue);
+        m_high = new BDDNode(x() + X_OFFSET / m_var, y() + Y_OFFSET, v);
+        m_low = new BDDNode(x() - X_OFFSET / m_var, y() + Y_OFFSET, v);
     } else {
         // if not, recursively insert into both subtrees
         m_high->insertInternal(v, highValue, lowValue, level - 1);
         m_low->insertInternal(v, highValue, lowValue, level - 1);
     }
-}
-
-std::ostream &operator<<(std::ostream &out, const BDDNode *bdd)
-{
-    return bdd->print(out);
 }

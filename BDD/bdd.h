@@ -21,14 +21,13 @@ private:
     static constexpr int NODE_RADIUS = 25;
 
 public:
-    BDDNode(qreal x, qreal y, Variable v, bool highValue = true, bool lowValue = false);
+    BDDNode(qreal x, qreal y, Variable v);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
 
     void insert(Variable v, bool highValue = true, bool lowValue = false);
-    std::ostream& print(std::ostream& out) const;
     void draw(QGraphicsScene *scene);
     void updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes);
 
@@ -42,7 +41,5 @@ private:
     Variable m_var;
     bool m_value;
 };
-
-std::ostream& operator<<(std::ostream& out, const BDDNode *bdd);
 
 #endif // BDD_H
