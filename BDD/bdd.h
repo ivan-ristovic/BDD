@@ -32,6 +32,7 @@ public:
     void updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes);
     void reduce();
     bool operator==(const BDDNode& other) const;
+    friend std::ostream& operator<< (std::ostream &out, BDDNode* const& node);
 
 private:
 
@@ -40,7 +41,8 @@ private:
     QPair<BDDNode *, BDDNode *> findIsomorph(BDDNode* root, BDDNode *parent);
     bool isIsomorph(BDDNode* other);
 
-    bool eliminate();
+    bool eliminate(BDDNode *parent);
+    void hideSubTree();
 
     BDDNode *m_low;
     BDDNode *m_high;

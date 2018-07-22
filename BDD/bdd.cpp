@@ -105,19 +105,19 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
 void BDDNode::reduce()
 {
     bool bddChanged = true;
-    //while (bddChanged) // TODO figure out why the pointers are not updated
+    while (bddChanged) // TODO figure out how to update the scene every sec
     {
         bddChanged = this->merge(this);
         if (!bddChanged)
         {
-            bddChanged = this->eliminate();
+            bddChanged = this->eliminate(nullptr);
         }
 
         if (bddChanged)
         {
             // If there was a change, update the bddin 1s and have simulaton of reduction algorithm.
+            this->scene()->update();
             QThread::sleep(1);
-            update();
         }
     }
 }
@@ -125,34 +125,33 @@ void BDDNode::reduce()
 
 bool BDDNode::merge(BDDNode* root)
 {
-    if (m_var == 0)
-    {
-        return false;
-    }
-
-    bool l = m_low->merge(root);
-    if (l)
-        return true;
-    bool h = m_high->merge(root);
-    if (h)
-        return true;
-
     QPair<BDDNode*, BDDNode*> i = this->findIsomorph(root, nullptr);
     if (i.first != nullptr)
     {
         // TODO free subtree
-        if (*(i.second->m_low) == *(i.first))
+        if (i.second->m_low == i.first)
         {
             // free(i.second->m_low)
+            i.second->m_low->hideSubTree();
             i.second->m_low = this;
         }
         else
         {
             // free(i.second->m_high)
+            i.second->m_high->hideSubTree();
             i.second->m_high = this;
         }
         // THINK: pointer to parent?
         return true;
+    }
+
+    if (m_var)
+    {
+        bool l = m_low->merge(root);
+        bool h = false;
+        if (!l)
+            h = m_high->merge(root);
+        return l || h;
     }
 
     return false;
@@ -197,18 +196,64 @@ bool BDDNode::isIsomorph(BDDNode* other)
             return false;
     }
 
-    bool l = this->m_low->isIsomorph(other->m_low);
-    bool r = false;
-    if (l)
-        r = this->m_high->isIsomorph(other->m_high);
+    if (m_var)
+    {
+        bool l = this->m_low->isIsomorph(other->m_low);
+        bool r = false;
+        if (l)
+            r = this->m_high->isIsomorph(other->m_high);
 
-    return l || r;
+        return l && r;
+    }
+
+    return false;
 }
 
-bool BDDNode::eliminate()
+bool BDDNode::eliminate(BDDNode* parent)
 {
-    // TODO add elimination rule here
-    return false;
+    if (this->m_var == 0)
+        return false;
+
+    if (this->m_low == this->m_high)
+    {
+        if (this->m_low->m_var != 0)
+        {
+            // TODO delete this->m_low
+            this->m_low->hide();
+            this->m_low = this->m_low->m_low;
+            this->m_high = this->m_high->m_high;
+        }
+        else
+        {
+            if (parent == nullptr)
+            {
+                // TODO delete this->m_low
+                this->m_low->hide();
+                BDDNode* temp = this->m_low;
+                this->m_var = temp->m_var;
+                this->m_value = temp->m_value;
+                this->m_low = nullptr;
+                this->m_high = nullptr;
+            }
+            else
+            {
+                // TODO delete this
+                this->hide();
+                if (parent->m_low == this)
+                    parent->m_low = this->m_low;
+                else
+                    parent->m_high = this->m_low;
+            }
+        }
+        return true;
+    }
+
+    bool l = (this->m_low)->eliminate(this);
+    bool h = false;
+    if (!l)
+        h = (this->m_high)->eliminate(this);
+
+    return l || h;
 }
 
 bool BDDNode::operator==(const BDDNode& other) const
@@ -216,4 +261,22 @@ bool BDDNode::operator==(const BDDNode& other) const
     if (typeid(*this) != typeid(other))
         return false;
     return m_var == other.m_var && (m_var == 0 ? m_value == other.m_value : true );
+}
+
+std::ostream& operator<< (std::ostream &out, BDDNode* const& node)
+{
+    if (node->m_var)
+        out << "x" << "m_var";
+    else
+        out << (node->m_value ? "T" : "F");
+    return out;
+}
+
+void BDDNode::hideSubTree()
+{
+    this->hide();
+    if (this->m_low != nullptr)
+        this->m_low->hideSubTree();
+    if (this->m_high != nullptr)
+        this->m_high->hideSubTree();
 }
