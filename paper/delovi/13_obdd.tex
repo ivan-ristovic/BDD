@@ -24,21 +24,20 @@ ROBDD se mo\v{z}e konstruisati na vi\v{s}e na\v{c}ina. U ovom poglavlju \'c{}e n
 
 Najjednostavniji na\v{c}in da se konstrui\v{s}e ROBDD je da se najpre konstrui\v{s}e ekvivalentno uredjeno binarno drvo odlu\v{c}ivanja. Nakon toga se primenjuju slede\'c{}a pravila dokle god ona menjaju postoju\'c{}i dijagram:
 \begin{itemize}
-    \item Pravilo spajanja - Svaka dva podstabla koja imaju izomorfan BDD se spajaju. U baznom slu\v{c}aju to predstavlja spajanje listova koji imaju iste vrednosti.
-    \item Pravilo eliminacije - Ukoliko su i visoko i nisko pod-drvo ista, bazni \v{c}vor se uklanja.
+    \item Pravilo spajanja - Svaka dva podstabla koja imaju izomorfan BDD se spajaju. U baznom slu\v{c}aju to predstavlja spajanje listova koji imaju iste vrednosti (videti sliku \ref{fig:reductionRule}).
+    \item Pravilo eliminacije - Ukoliko su i visoko i nisko pod-drvo ista, bazni \v{c}vor se uklanja (videti sliku \ref{fig:eliminationRule}).
 \end{itemize}
-Ova pravila su ilustrovana slikama \ref{fig:eliminationRule} i \ref{fig:reductionRule}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{slike/pravilo_spajanja.PNG}
+    \includegraphics[scale=0.7]{slike/pravilo_spajanja.PNG}
     \caption{Pravilo spajanja}
     \label{fig:reductionRule}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{slike/pravilo_eliminacije.PNG}
+    \includegraphics[scale=0.7]{slike/pravilo_eliminacije.PNG}
     \caption{Pravilo eliminacije}
     \label{fig:eliminationRule}
 \end{figure}
@@ -61,8 +60,80 @@ Postupak je rekurzivan: kre\'c{}e se od bulovske funkcije koja se podeli na podf
 Naredni primer oslikava efikasnu metodu za generisanje ROBDD.
 
 \begin{exmp}
-    TODO
+    Posmatrajmo funkciju
+    $$(x_{1} \vee x_{2}) \wedge (\overline{x_{1}} \vee \overline{x_{2}})$$
+    Konstruisa\'c{}emo ROBDD u dva koraka, prvo posmatraju\'c{}i $x_{1} \vee x_{2}$. Iako ve\'c{} znamo kako izgleda ROBDD za ovu funkciju (pogledati poglavlje \ref{sec:BDD}), kako bismo ispo\v{s}tovali postupak idemo dublje i dolazimo do promeljivih $x_{1}$ i $x_{2}$. Njihovi ROBDD su (pritom, redosled smo odabrali tako da $x_{1}$ dolazi pre $x_{2}$):
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_1.PNG}
+    \end{figure}
+
+    Primenjuju\'c{}i bilo koju bulovsku operaciju nad dva ROBDD sa istim redosledom zna\v{c}i krenuto od korena i pratiti paralelne puteve do listova. Kada stignemo do listova, primenjujemo funkciju nad logi\v{c}kom konstantom sadr\v{z}anom u listu kako bismo formirali rezultat za trenutni put. U na\v{s}em primeru, kre\'c{}emo od $x_{1}$ sa levog dijagrama i hipoteti\v{c}kog $x_{1}$ sa desnog dijagrama:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_2.PNG}
+    \end{figure}
+
+    Ako pratimo nisku granu sa oba dijagrama, dolazimo do hipoteti\v{c}kog $x_{2}$ na levom dijagramu. Takodje prikazujemo delimi\v{c}no konstruisani rezultuju\'c{}i ROBDD ispod dva ROBDD za promenljive:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_3.PNG}
+    \end{figure}
+
+    S obzirom da niske grane u oba dijagrama vode ka 0, ra\v{c}unamo $0 \vee 0 = 0$ i registrujemo $0$ kao rezultat:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_4.PNG}
+    \end{figure}
+
+    Prate\'c{}i visoku granu od $x_{2}$, dolazimo do vrednosti $0$ na levom i $1$ na desnom dijagramu. Primenom funckije dobijamo rezultat $0 \vee 1 = 1$:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_5.PNG}
+    \end{figure}
+
+    Vra\'c{}amo se nazad do $x_{1}$ i razmatramo slu\v{c}aj $x_{1} = 1$ i $x_{2} = 0$. U ovom slu\v{c}aju ra\v{c}unamo $1 \vee 0 = 1$. Napominjemo da je \v{c}vor $x_{2}$ u levom dijagramu samo pomo\'c{} za razumevanje algoritma, u implementaciji se ne bi eksplicitno pravio taj \v{c}vor.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_6.PNG}
+    \end{figure}
+
+    Na kraju pratimo visoke grane iz oba $x_{2}$ \v{c}vora i dolazimo do vrednosti $1$:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_7.PNG}
+    \end{figure}
+
+    Analiziraju\'c{}i rezultat prime\'c{}ujemo da postoje izomorfizmi u konstruisanom dijagramu (pogledati \v{c}vor $x_{2}$ sa desne strane). Stoga, primenjujemo pravilo eliminacije i dobijamo slede\'c{}i rezultat:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_8.PNG}
+    \end{figure}
+
+    ROBDD za funkciju $\overline{x_{1}} \vee \overline{x_{2}}$ se mo\v{z}e dobiti invertovanjem vrednosti u listovima ve\'c{} dobijenog dijagrama. Podsetimo se da smo po\v{c}eli od funkcije $(x_{1} \vee x_{2}) \wedge (\overline{x_{1}} \vee \overline{x_{2}})$ i uspe\v{s}no smo kreirali ROBDD za delove, $(x_{1} \vee x_{2})$ i $(\overline{x_{1}} \vee \overline{x_{2}})$, redom:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_9.PNG}
+    \end{figure}
+
+    Ponavljaju\'c{}i gore opisan postupak za spajanje dijagrama dolazimo do kona\v{c}nog re\v{s}enja:
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/ROBDD_primer_10.PNG}
+    \end{figure}
+
+    Takodje, kako bismo pokazali da se funkcije mogu porediti koriste\'c{}i njihove reprezentacije preko dijagrama (sve dok su te reprezentacije kanoni\v{c}ne), mo\v{z}emo se uveriti da va\v{z}i
+    $$(x_{1} \vee x_{2}) \wedge (\overline{x_{1}} \vee \overline{x_{2}}) = x_{1} \oplus x_{2}$$
+    jer je gore konstruisani dijagram identi\v{c}an dijagramu za funkciju $\oplus$ (videti sliku \ref{fig:BDOrXor}).
+\qed
 \end{exmp}
-
-
-
