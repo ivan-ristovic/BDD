@@ -99,6 +99,8 @@ void MainWindow::updateTree()
 
 void MainWindow::reduceTree()
 {
+    ui->pbReduce->setEnabled(false);
+
     ui->cbV1->setEnabled(false);
     ui->cbV2->setEnabled(false);
     ui->cbV3->setEnabled(false);
@@ -113,7 +115,10 @@ void MainWindow::reduceTree()
 
 void MainWindow::reduceTick()
 {
-    if (!m_bdd->reduceStep())
+    if (!m_bdd->reduceStep()) {
         m_reduceTicker->stop();
+        ui->pbReduce->setEnabled(true);
+    }
+
     ui->graphicsView->viewport()->update();
 }
