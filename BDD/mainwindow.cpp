@@ -2,15 +2,17 @@
 #include "ui_mainwindow.h"
 #include "bdd.h"
 #include <QDebug>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_bdd(nullptr)
+    , m_reduceTicker(new QTimer())
 {
     ui->setupUi(this);
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    connect(ui->pbShow, SIGNAL(clicked()), this, SLOT(drawTree()));
+    connect(ui->pbReset, SIGNAL(clicked()), this, SLOT(drawTree()));
     connect(ui->cbV1, SIGNAL(clicked()), this, SLOT(updateTree()));
     connect(ui->cbV2, SIGNAL(clicked()), this, SLOT(updateTree()));
     connect(ui->cbV3, SIGNAL(clicked()), this, SLOT(updateTree()));
@@ -25,23 +27,48 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(scene);
 
     ui->pbReduce->setEnabled(true);
+
+    connect(m_reduceTicker, SIGNAL(timeout()), this, SLOT(reduceTick()));
+    m_reduceTicker->setInterval(1000);
+
+    drawTree();
 }
 
 MainWindow::~MainWindow()
 {
+    delete m_reduceTicker;
     delete scene;
     delete ui;
 }
 
 void MainWindow::drawTree()
 {
+    m_reduceTicker->stop();
+
+    scene->clear();
+    ui->cbV1->setChecked(false);
+    ui->cbV2->setChecked(false);
+    ui->cbV3->setChecked(false);
+    ui->cbV4->setChecked(false);
+    ui->cbV5->setChecked(false);
+    ui->cbV6->setChecked(false);
+    ui->cbV7->setChecked(false);
+    ui->cbV8->setChecked(false);
+    ui->cbV1->setEnabled(true);
+    ui->cbV2->setEnabled(true);
+    ui->cbV3->setEnabled(true);
+    ui->cbV4->setEnabled(true);
+    ui->cbV5->setEnabled(true);
+    ui->cbV6->setEnabled(true);
+    ui->cbV7->setEnabled(true);
+    ui->cbV8->setEnabled(true);
+
     // create tree
     m_bdd = new BDDNode(0, 0, 1);
     m_bdd->insert(2);
     m_bdd->insert(3);
 
     // draw
-    scene->clear();
     m_bdd->draw(scene);
     updateTree();
 
@@ -72,6 +99,21 @@ void MainWindow::updateTree()
 
 void MainWindow::reduceTree()
 {
-    m_bdd->reduce();
+    ui->cbV1->setEnabled(false);
+    ui->cbV2->setEnabled(false);
+    ui->cbV3->setEnabled(false);
+    ui->cbV4->setEnabled(false);
+    ui->cbV5->setEnabled(false);
+    ui->cbV6->setEnabled(false);
+    ui->cbV7->setEnabled(false);
+    ui->cbV8->setEnabled(false);
+
+    m_reduceTicker->start();
+}
+
+void MainWindow::reduceTick()
+{
+    if (!m_bdd->reduceStep())
+        m_reduceTicker->stop();
     ui->graphicsView->viewport()->update();
 }

@@ -18,7 +18,7 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pbShow">
+   <widget class="QPushButton" name="pbReset">
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -28,7 +28,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Show BDT</string>
+     <string>Reset</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tableWidget">
@@ -347,7 +347,7 @@
       <x>360</x>
       <y>20</y>
       <width>421</width>
-      <height>391</height>
+      <height>381</height>
      </rect>
     </property>
    </widget>

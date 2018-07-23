@@ -101,27 +101,28 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
     }
 }
 
-
 void BDDNode::reduce()
 {
-    bool bddChanged = true;
-    while (bddChanged) // TODO figure out how to update the scene every sec
-    {
-        bddChanged = this->merge(this);
-        if (!bddChanged)
-        {
-            bddChanged = this->eliminate(nullptr);
-        }
-
-        if (bddChanged)
-        {
-            // If there was a change, update the bddin 1s and have simulaton of reduction algorithm.
-            this->scene()->update();
-            QThread::sleep(1);
-        }
-    }
+    while (reduceStep())
+        ;
 }
 
+bool BDDNode::reduceStep()
+{
+    bool bddChanged = this->merge(this);
+    if (!bddChanged)
+    {
+        bddChanged = this->eliminate(nullptr);
+    }
+
+    if (bddChanged)
+    {
+        // If there was a change, update the bdd in 1s and have simulaton of reduction algorithm.
+        this->scene()->update();
+    }
+
+    return bddChanged;
+}
 
 bool BDDNode::merge(BDDNode* root)
 {
@@ -175,7 +176,6 @@ QPair<BDDNode*, BDDNode*> BDDNode::findIsomorph(BDDNode* root, BDDNode* parent)
     }
     return result;
 }
-
 
 bool BDDNode::isIsomorph(BDDNode* other)
 {

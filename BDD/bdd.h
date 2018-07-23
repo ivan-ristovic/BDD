@@ -31,6 +31,7 @@ public:
     void draw(QGraphicsScene *scene);
     void updateValues(std::vector<bool> &values, const std::vector<const QCheckBox *> &checkboxes);
     void reduce();
+    bool reduceStep();
     bool operator==(const BDDNode& other) const;
     friend std::ostream& operator<< (std::ostream &out, BDDNode* const& node);
 
