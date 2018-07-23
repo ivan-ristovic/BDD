@@ -46,6 +46,7 @@ void MainWindow::drawTree()
     updateTree();
 
     ui->pbReduce->setEnabled(true);
+    ui->graphicsView->viewport()->update();
 }
 
 void MainWindow::updateTree()
@@ -72,4 +73,5 @@ void MainWindow::updateTree()
 void MainWindow::reduceTree()
 {
     m_bdd->reduce();
+    ui->graphicsView->viewport()->update();
 }

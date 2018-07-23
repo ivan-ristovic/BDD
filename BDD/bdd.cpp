@@ -220,6 +220,8 @@ bool BDDNode::eliminate(BDDNode* parent)
         {
             // TODO delete this->m_low
             this->m_low->hide();
+            BDDNode* temp = this->m_low;
+            this->m_var = temp->m_var;
             this->m_low = this->m_low->m_low;
             this->m_high = this->m_high->m_high;
         }
