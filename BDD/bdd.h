@@ -19,6 +19,11 @@ private:
     static constexpr int X_OFFSET = 100;
     static constexpr int Y_OFFSET = 50;
     static constexpr int NODE_RADIUS = 25;
+    static QColor BLUE;
+    static QColor YELLOW;
+    static QColor RED;
+    static QColor GREEN;
+    static QColor ORANGE;
 
 public:
     BDDNode(qreal x, qreal y, Variable v);

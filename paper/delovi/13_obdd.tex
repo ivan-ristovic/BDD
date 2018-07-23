@@ -45,8 +45,72 @@ Najjednostavniji na\v{c}in da se konstrui\v{s}e ROBDD je da se najpre konstrui\v
 Mana naivnog pristupa konstrukciji ROBDD je \v{s}to je on uvek eksponencijalne slo\v{z}enosti. Razlog za to je \v{s}to je kostrukcija kompletnog binarnog drveta odlu\v{c}ivanja skupa operacija, koja, pored velike vremenske slo\v{z}enosti, zauzima i eksponencijalno veliku koli\v{c}inu memorije u odnosu na broj promenljivih u ulaznoj formuli.
 
 \begin{exmp}
-    TODO
-    Kada uradimo redukciju u programcicu, mozemo da ubazimo slicice
+    Posmatrajmo funkciju
+    $$(x_{1} \vee \overline{x_{2}} \vee \overline{x_{3}}) \wedge (x_{1} \vee \overline{x_{2}} \vee x_{3}) \wedge (x_{1} \vee x_{2} \vee \overline{x_{3}}) \wedge (x_{1} \vee x_{2} \vee x_{3})$$
+    Koriste\'c{}i prethodno opisani naivni algoritam, konstruisa\'c{}emo ROBDD za zadatu funkciju.
+    Najpre, konstruisa\'c{}emo binarno drvo odlu\v{c}ivanja koje odgovara ovoj funkciji. Ono je prikazano na narednoj slici:
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/00.png}
+    \end{figure}
+    
+    Sada po\v{c}injemo da iteriramo dokle god pravila eliminacije ili spajanja imaju efekta.
+    
+    Pravilom spajanja spajamo prva dva podstabla:
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/01.png}
+    \end{figure}
+    
+    Zatim, takodje pravilom spajanja, spajamo dva \emph{F} \v{c}vora.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/02.png}
+    \end{figure}
+    
+    Naredna dva koraka su ekvivalentna prethodnim.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/03.png}
+    \end{figure}
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/04.png}
+    \end{figure}
+    
+    U narednom koraku, pravilom eliminacije, bri\v{s}emo \v{c}vor.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/05.png}
+    \end{figure}
+    
+    Zatim, pravilom eliminacije, bri\v{s}emo naredni \v{c}vor.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/06.png}
+    \end{figure}
+    
+    Na ekvivalentan na\v{c}in, uklanjamo preostale \v{c}vorove.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/07.png}
+    \end{figure}
+        
+    \begin{figure}[H]
+        \centering
+        \includegraphics{slike/primer/08.png}
+    \end{figure}
+    
+    Poslednjim korak predstavlja generisani ROBDD. Kao \v{s}to vidimo, ono je zna\v{c}ajno manje od po\v{c}etnog binarnog stabla odlu\v{c}ivanja. Za izra\v{c}unavanje vrednosti funkcije, dovoljno je ispitati samo vrednost promenljive x1.
+    
 \end{exmp}
 
 

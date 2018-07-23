@@ -5,6 +5,13 @@
 #include <QPair>
 #include <QDebug>
 
+
+QColor BDDNode::BLUE = QColor(178, 215, 229);
+QColor BDDNode::GREEN = QColor(102, 204, 121);
+QColor BDDNode::YELLOW = QColor(255, 248, 127);
+QColor BDDNode::RED = QColor(255, 102, 102);
+QColor BDDNode::ORANGE = QColor(255, 171, 25);
+
 BDDNode::BDDNode(qreal x, qreal y, Variable v)
     : m_low(nullptr)
     , m_high(nullptr)
@@ -25,16 +32,16 @@ BDDNode::BDDNode(qreal x, qreal y, Variable v)
 void BDDNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     QBrush b;
-    m_value ? b = Qt::yellow : b = Qt::red;
+    m_value ? b = YELLOW : b = ORANGE;
 
     if (m_var) {
-        QPen pen = QPen(QBrush(Qt::GlobalColor::blue), 2);
+        QPen pen = QPen(QBrush(BLUE), 2);
         painter->setPen(pen);
         painter->drawLine(NODE_RADIUS / 2, NODE_RADIUS / 2, m_high->x() - x() + NODE_RADIUS / 2, m_high->y() - y() + NODE_RADIUS / 2);
         pen.setStyle(Qt::PenStyle::DotLine);
         painter->setPen(pen);
         painter->drawLine(NODE_RADIUS / 2, NODE_RADIUS / 2, m_low->x() - x() + NODE_RADIUS / 2, m_low->y() - y() + NODE_RADIUS / 2);
-        painter->setBrush(QBrush(Qt::yellow));
+        painter->setBrush(QBrush(BLUE));
         painter->setPen(Qt::PenStyle::SolidLine);
         painter->drawEllipse(0, 0, NODE_RADIUS, NODE_RADIUS);
         painter->drawText(5, 18, QString::fromStdString("X" + std::to_string(m_var)));
