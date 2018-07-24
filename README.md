@@ -6,9 +6,11 @@ This repository contains the paper and implementation on Binary Decision Diagram
 
 The application is written in C++ using Qt Framework 5.11 and qmake.
 
-![ss]()
-![ss]()
-![ss]()
+### Screenshots
+
+![ss](https://raw.githubusercontent.com/ivan-ristovic/bdd/master/showoff/01.PNG)
+![ss](https://raw.githubusercontent.com/ivan-ristovic/bdd/master/showoff/02.PNG)
+![ss](https://raw.githubusercontent.com/ivan-ristovic/bdd/master/showoff/03.PNG)
 
 ## Paper
 
