@@ -1,7 +1,7 @@
 \section{Op\v{s}ti binarni dijagrami odlu\v{c}ivanja (BDD)}
 \label{sec:BDD}
 
-Binarni dijagrami odlu\v{c}ivanja (engl. \emph{Binary Decision Diagrams}, u daljem tekstu \emph{BDD}) su unapredjenje binarnih drveta odlu\v{c}ivanja. Prvo unapredjenje je uklanjanje redundantnih grana u drvetu. Na primer, posmatrajmo funkciju $\wedge$ definisanu u poglavlju \ref{sec:BinarnaDrvetaOdlucivanja}. U niskom pod-drvetu obe grane koje polaze od promenljive $x_{2}$ vode ka vrednosti $0$, stoga nije potrebno ispitivati vrednost promenljive $x_{2}$ \footnote{tzv. \emph{lenjo izra\v{c}unavanje}}. Ovakvom redukcijom se dobija drvo na slici \ref{diag:BDDAnd}.
+Binarni dijagrami odlu\v{c}ivanja (engl. \emph{Binary Decision Diagrams}, u daljem tekstu \emph{BDD}) \cite{BDD} su unapredjenje binarnih drveta odlu\v{c}ivanja. Prvo unapredjenje je uklanjanje redundantnih grana u drvetu. Na primer, posmatrajmo funkciju $\wedge$ definisanu u poglavlju \ref{sec:BinarnaDrvetaOdlucivanja}. U niskom pod-drvetu obe grane koje polaze od promenljive $x_{2}$ vode ka vrednosti $0$, stoga nije potrebno ispitivati vrednost promenljive $x_{2}$ \footnote{tzv. \emph{lenjo izra\v{c}unavanje}}. Ovakvom redukcijom se dobija drvo na slici \ref{diag:BDDAnd}.
 
 \begin{figure}[H]
     \centering
@@ -20,3 +20,5 @@ Drugo unapredjenje je dozvoljavanje deljenja identi\v{c}nih pod-drveta. Ponovo, 
 \end{figure}
 
 U najgorem slu\v{c}aju, BDD \'c{}e biti eksponencijalno veliki u odnosu na ulaz, mada u praksi je to retko slu\v{c}aj. Takodje, konstantne funkcije se mogu predstaviti samo jednim \v{c}vorom, bez obzira na broj ulaznih promenljivih.
+
+Od sada vi\v{s}e ne\'c{}emo govoriti o stablima, jer su BDD u op\v{s}tem slu\v{c}aju zapravo usmereni acikli\v{c}ki grafovi (engl. \emph{DAG}). Stoga \'c{}emo u nastavku pod terminima \emph{visoki pod-graf} ili \emph{visoki naslednik} nekog \v{c}vora ozn\v{c}avati pod-graf do koga vodi 1-grana iz trenutnog \v{c}vora. Sli\v{c}no, pod terminima \emph{niski pod-graf} ili \emph{niski naslednik} nekog \v{c}vora ozn\v{c}avati pod-graf do koga vodi 0-grana iz istog \v{c}vora.

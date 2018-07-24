@@ -7,7 +7,7 @@ Binarni dijagrami odlu\v{c}ivanja sa potisnutim nulama (engl. \emph{Zero-suppres
     \emph{ZDD} je bilo koji uredjeni BDD sa dodatnim pravilom da \emph{pozitivna grana} svakog unutra\v{s}njeg \v{c}vora ne sme da bude povezana sa 0-\v{c}vorom. Ukoliko ovo pravilo nije ispunjeno ili ukoliko postoje redundantni \v{c}vorovi, rezultuju\'c{}i ZDD se naziva \emph{neredukovani ZDD}.
 \end{defn}
 
-Kao i BDD, ZDD koristi dva pravila za redukciju - \emph{pravilo spajanja} i \emph{pravilo eliminacije}. Pravilo spajanja izomorfnih pod-grafova je isto kao i kod BDD. Medjutim, postoji razlika u pravilu eliminacije. Definisa\'c{}emo formalno pomenuta pravila.
+Kao i BDD, ZDD koriste dva pravila za redukciju - \emph{pravilo spajanja} i \emph{pravilo eliminacije}. Pravilo spajanja izomorfnih pod-grafova je isto kao i kod BDD. Medjutim, postoji razlika u pravilu eliminacije. Definisa\'c{}emo formalno pomenuta pravila.
 
 \begin{defn}
     \emph{Pravilo spajanja za ZDD}: Ako unutra\v{s}nji \v{c}vorovi $v_{1}$ i $v_{2}$ testiraju istu promenljivu i njihove pozitivne i negativne grane vode ka istim \v{c}vorovima, tada elimini\v{s}emo jedan od \v{c}vorova $u$ ili $v$ i sve ulazne grane u eliminisani \v{c}vor preusmeravamo ka preostalom \v{c}voru.
