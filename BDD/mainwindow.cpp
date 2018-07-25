@@ -64,7 +64,7 @@ void MainWindow::drawTree()
     ui->cbV8->setEnabled(true);
 
     // create tree
-    m_bdd = new BDDNode(0, 0, 1);
+    m_bdd = new BDDNode(0, 0, 1, nullptr);
     m_bdd->insert(2);
     m_bdd->insert(3);
 

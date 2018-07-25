@@ -12,18 +12,24 @@ QColor BDDNode::YELLOW = QColor(255, 248, 127);
 QColor BDDNode::RED = QColor(255, 102, 102);
 QColor BDDNode::ORANGE = QColor(255, 171, 25);
 
-BDDNode::BDDNode(qreal x, qreal y, Variable v)
+BDDNode::BDDNode(qreal x, qreal y, Variable v, BDDNode* parent)
     : m_low(nullptr)
     , m_high(nullptr)
     , m_depth(0)
     , m_var(v)
+    , m_isRoot(false)
 {
     setPos(x, y);
 
+    if (parent != nullptr)
+        m_parents.push_back(parent);
+    else
+        m_isRoot = true;
+
     // if this is a variable node, automatically add leaves as children
     if (m_var) {
-        m_high = new BDDNode(x + X_OFFSET / m_var, y + Y_OFFSET, 0);
-        m_low = new BDDNode(x - X_OFFSET / m_var, y + Y_OFFSET, 0);
+        m_high = new BDDNode(x + X_OFFSET / m_var, y + Y_OFFSET, 0, this);
+        m_low = new BDDNode(x - X_OFFSET / m_var, y + Y_OFFSET, 0, this);
         m_high->m_value = false;
         m_low->m_value = false;
     }
@@ -99,8 +105,8 @@ void BDDNode::insertInternal(Variable v, bool highValue, bool lowValue, unsigned
     // check if we are at correct level
     if (level == 0) {
         // if yes, add new variable node to both children pointers
-        m_high = new BDDNode(x() + X_OFFSET / m_var, y() + Y_OFFSET, v);
-        m_low = new BDDNode(x() - X_OFFSET / m_var, y() + Y_OFFSET, v);
+        m_high = new BDDNode(x() + X_OFFSET / m_var, y() + Y_OFFSET, v, this);
+        m_low = new BDDNode(x() - X_OFFSET / m_var, y() + Y_OFFSET, v, this);
     } else {
         // if not, recursively insert into both subtrees
         m_high->insertInternal(v, highValue, lowValue, level - 1);
@@ -119,7 +125,7 @@ bool BDDNode::reduceStep()
     bool bddChanged = this->merge(this);
     if (!bddChanged)
     {
-        bddChanged = this->eliminate(nullptr);
+        bddChanged = this->eliminate();
     }
 
     if (bddChanged)
@@ -133,23 +139,25 @@ bool BDDNode::reduceStep()
 
 bool BDDNode::merge(BDDNode* root)
 {
-    QPair<BDDNode*, BDDNode*> i = this->findIsomorph(root, nullptr);
-    if (i.first != nullptr)
-    {
-        // TODO free subtree
-        if (i.second->m_low == i.first)
+    BDDNode* i = this->findIsomorph(root);
+    if (i != nullptr)
+    {        
+        std::vector<BDDNode*> toDelete;
+        for (BDDNode* parent : i->m_parents)
         {
-            // free(i.second->m_low)
-            i.second->m_low->hideSubTree();
-            i.second->m_low = this;
+            this->m_parents.push_back(parent);
+            if (parent->m_low == i)
+                parent->m_low = this;
+            else
+                parent->m_high = this;
+            toDelete.push_back(parent);
         }
-        else
-        {
-            // free(i.second->m_high)
-            i.second->m_high->hideSubTree();
-            i.second->m_high = this;
-        }
-        // THINK: pointer to parent?
+
+        for (BDDNode* el : toDelete)
+            removeFromVector(i->m_parents, el);
+
+        i->hideSubTree();
+
         return true;
     }
 
@@ -165,30 +173,25 @@ bool BDDNode::merge(BDDNode* root)
     return false;
 }
 
-QPair<BDDNode*, BDDNode*> BDDNode::findIsomorph(BDDNode* root, BDDNode* parent)
+BDDNode* BDDNode::findIsomorph(BDDNode* root)
 {
-    QPair<BDDNode*, BDDNode*> result(nullptr, nullptr);
-
-    if (parent != nullptr && isIsomorph(root))
+    if (!root->m_isRoot && isIsomorph(root))
     {
-        result.first = root;
-        result.second = parent;
-        return result;
+        return root;
     }
+
+    BDDNode* result = nullptr;
     if (root->m_var != 0)
     {
-        result = findIsomorph(root->m_low, root);
-        if (result.first == nullptr)
-            result = findIsomorph(root->m_high, root);
+        result = findIsomorph(root->m_low);
+        if (result == nullptr)
+            result = findIsomorph(root->m_high);
     }
     return result;
 }
 
 bool BDDNode::isIsomorph(BDDNode* other)
 {
-    // same node
-    if (this == other)
-        return false;
     if (other == nullptr)
         return false;
     // vars are different
@@ -197,11 +200,21 @@ bool BDDNode::isIsomorph(BDDNode* other)
     // leafs
     if (m_var == 0)
     {
-        if (other->m_var == 0 && m_value == other->m_value)
-            return true;
+        if (this == other)
+        {
+            if (m_parents[0] != other->m_parents[0])
+                return true;
+        }
         else
-            return false;
+        {
+            if (other->m_var == 0 && m_value == other->m_value)
+                return true;
+        }
+        return false;
     }
+    // same node
+    if (this == other)
+        return false;
 
     if (m_var)
     {
@@ -216,51 +229,56 @@ bool BDDNode::isIsomorph(BDDNode* other)
     return false;
 }
 
-bool BDDNode::eliminate(BDDNode* parent)
+bool BDDNode::eliminate()
 {
     if (this->m_var == 0)
         return false;
 
     if (this->m_low == this->m_high)
     {
-        if (this->m_low->m_var != 0)
+        removeFromVector(this->m_low->m_parents, this);
+        if (!this->m_parents.empty() || !this->m_isRoot)
         {
-            // TODO delete this->m_low
-            this->m_low->hide();
-            BDDNode* temp = this->m_low;
-            this->m_var = temp->m_var;
-            this->m_low = this->m_low->m_low;
-            this->m_high = this->m_high->m_high;
+            std::vector<BDDNode*> toDelete;
+            for (int i = 0; i < this->m_parents.size(); i++)
+            {
+                this->m_low->m_parents.push_back(this->m_parents[i]);
+                if (this->m_parents[i]->m_low == this)
+                    this->m_parents[i]->m_low = this->m_high;
+                else
+                    this->m_parents[i]->m_high = this->m_high;
+                toDelete.push_back(this->m_parents[i]);
+            }
+
+            for (BDDNode* el : toDelete)
+                removeFromVector(this->m_parents, el);
+            this->hideSubTree();
         }
         else
         {
-            if (parent == nullptr)
+            BDDNode* temp = this->m_low;
+            this->m_var = temp->m_var;
+            this->m_value = temp->m_value;
+            this->m_low = temp->m_low;
+            this->m_high = temp->m_high;
+            for (BDDNode* parent : temp->m_parents)
             {
-                // TODO delete this->m_low
-                this->m_low->hide();
-                BDDNode* temp = this->m_low;
-                this->m_var = temp->m_var;
-                this->m_value = temp->m_value;
-                this->m_low = nullptr;
-                this->m_high = nullptr;
-            }
-            else
-            {
-                // TODO delete this
-                this->hide();
-                if (parent->m_low == this)
-                    parent->m_low = this->m_low;
+                if (parent->m_low == temp)
+                    parent->m_low = this;
                 else
-                    parent->m_high = this->m_low;
+                    parent->m_high = this;
+                //this->m_parents.push_back(parent);
             }
+            temp->hide();
         }
+
         return true;
     }
 
-    bool l = (this->m_low)->eliminate(this);
+    bool l = (this->m_low)->eliminate();
     bool h = false;
     if (!l)
-        h = (this->m_high)->eliminate(this);
+        h = (this->m_high)->eliminate();
 
     return l || h;
 }
@@ -283,9 +301,28 @@ std::ostream& operator<< (std::ostream &out, BDDNode* const& node)
 
 void BDDNode::hideSubTree()
 {
+    if (!this->m_parents.empty() || this->m_isRoot)
+        return;
+
     this->hide();
     if (this->m_low != nullptr)
+    {
+        removeFromVector(this->m_low->m_parents, this);
         this->m_low->hideSubTree();
+    }
     if (this->m_high != nullptr)
+    {
+        removeFromVector(this->m_high->m_parents, this);
         this->m_high->hideSubTree();
+    }
 }
+
+void BDDNode::removeFromVector(std::vector<BDDNode*>& parents, BDDNode* parent)
+{
+    parents.erase(std::remove_if(parents.begin(),
+                                  parents.end(),
+                                    [parent](BDDNode* n){return parent == n; }),
+                   parents.end());
+}
+
+

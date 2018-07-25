@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <iostream>
+#include <list>
+#include <algorithm>
 #include <QGraphicsScene>
 #include <QObject>
 #include <QGraphicsObject>
@@ -26,7 +28,7 @@ private:
     static QColor ORANGE;
 
 public:
-    BDDNode(qreal x, qreal y, Variable v);
+    BDDNode(qreal x, qreal y, Variable v, BDDNode *parent);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
@@ -44,17 +46,20 @@ private:
 
     void insertInternal(Variable v, bool highValue, bool lowValue, unsigned level);
     bool merge(BDDNode *root);
-    QPair<BDDNode *, BDDNode *> findIsomorph(BDDNode* root, BDDNode *parent);
+    BDDNode *findIsomorph(BDDNode* root);
     bool isIsomorph(BDDNode* other);
 
-    bool eliminate(BDDNode *parent);
+    bool eliminate();
     void hideSubTree();
+    void removeFromVector(std::vector<BDDNode *> &parents, BDDNode* parent);
 
     BDDNode *m_low;
     BDDNode *m_high;
     std::atomic<unsigned> m_depth;
     Variable m_var;
     bool m_value;
+    std::vector<BDDNode*> m_parents;
+    bool m_isRoot;
 };
 
 #endif // BDD_H
